@@ -1,0 +1,31 @@
+# 毎週土曜 朝5時（日本時間）に SEC から財務データを取得して data/ を更新する
+name: SECデータ更新
+
+on:
+  schedule:
+    - cron: "0 20 * * 5"   # 金曜 20:00 UTC = 土曜 5:00 JST
+  workflow_dispatch:        # GitHubの画面から手動でも実行できる
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: SECからデータ取得
+        env:
+          SEC_CONTACT: ${{ secrets.SEC_CONTACT }}   # SECに名乗る連絡先メール（外からは見えない設定欄に保存）
+        run: python fetch_sec.py
+      - name: 変更があれば保存
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git diff --cached --quiet || git commit -m "SECデータ更新 $(date -u +%Y-%m-%d)"
+          git push
