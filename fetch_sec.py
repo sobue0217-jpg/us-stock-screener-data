@@ -40,9 +40,11 @@ SEC_ITEMS = [
     ("EQ", "inst", "USD", "first",
      ["StockholdersEquity", "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"]),
     ("ASSETS", "inst", "USD", "first", ["Assets"]),
+    ("SHARES", "dur", "shares", "first",
+     ["WeightedAverageNumberOfDilutedSharesOutstanding", "WeightedAverageNumberOfSharesOutstandingBasic"]),
 ]
 # CSVに出す項目（FCF = 営業CF − 設備投資 を追加）
-FIN_KEYS = ["REV", "OPI", "NI", "EPS", "OCF", "CAPEX", "FCF", "EQ", "ASSETS"]
+FIN_KEYS = ["REV", "OPI", "NI", "EPS", "OCF", "CAPEX", "FCF", "EQ", "ASSETS", "SHARES"]
 YEAR_COUNT = 6
 
 # 組織再編でSECの企業番号（CIK）が変わった会社 { 新CIK: 旧CIK }。新CIKにデータがない年は旧CIKで補う
